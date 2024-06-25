@@ -1,0 +1,66 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log and OS files
+*.log
+*.lock
+Thumbs.db
+
+# Android Studio files
+.idea/
+*.iws
+
+# Keystore files
+*.jks
+
+# Android build files
+app/build/
+*/build/
+captures/
+.externalNativeBuild/
+
+# ProGuard files
+proguard/
+proguard-android.txt
+proguard-rules.pro
+proguard-project.txt
+
+# lint
+lint/intermediates/
+lint/generated/
+lint/outputs/
+
+# Temporary files
+*~.nib
+*~.bak
+*.orig
+*.old
+*.rej
+
+# Mac OS X
+.Spotlight-V100
+.Trashes
+
+# Google Services (Firebase)
+# This file contains a configuration of a project's settings that should not be shared.
+google-services.json
