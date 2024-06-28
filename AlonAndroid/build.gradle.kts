@@ -1,18 +1,18 @@
-import org.gradle.api.publish.PublishingExtension
+import org.jreleaser.model.Distribution.DistributionType
+import org.jreleaser.model.Stereotype
 
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    `maven-publish`
+    id("org.jreleaser") version "1.12.0"
 }
 
 android {
-    namespace = "com.alonhealth.alonandroid"
+    namespace = "io.github.alonhealth.alonandroid"
     compileSdk = 34
 
     defaultConfig {
         minSdk = 29
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -33,40 +33,56 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
-    publishing {
-        singleVariant("release")
-    }
 }
 
-configure<PublishingExtension> {
-    publications {
-        create<MavenPublication>("release") {
-            from(components["release"])
-            groupId = "com.alonhealth"
-            artifactId = "alon-android"
-            version = "1.0.0"
+jreleaser {
+    project {
+        name.set("alon-android")
+        version.set("1.0.0")
+        description.set("A library to fetch data from Health Connect")
+        longDescription.set("A detailed description of the library.")
+        inceptionYear.set("2023")
+        copyright.set("2023 The AlonHealth Authors")
+        vendor.set("AlonHealth")
 
-            pom {
-                name.set("AlonAndroid")
-                description.set("A library to fetch data from Health Connect")
-                url.set("https://github.com/alonhealth/AlonAndroid")
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
+        authors.set(listOf("Author Name"))
+        tags.set(listOf("android", "health", "library"))
+
+        links {
+            homepage.set("https://github.com/alonhealth/AlonAndroid")
+            documentation.set("https://github.com/alonhealth/AlonAndroid/wiki")
+            license.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+            bugTracker.set("https://github.com/alonhealth/AlonAndroid/issues")
+            vcsBrowser.set("https://github.com/alonhealth/AlonAndroid")
+        }
+    }
+
+    release {
+        github {
+            name.set("AlonAndroid")
+            tagName.set("v1.0.0")
+            releaseName.set("alon-android-1.0.0")
+            branch.set("main")
+            draft.set(false)
+            discussionCategoryName.set("General")
+            prerelease {
+                enabled.set(false)
+            }
+            releaseNotes {
+                enabled.set(true)
+                configurationFile.set("release-notes.md")
             }
         }
     }
-    repositories {
-        maven {
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                username = project.findProperty("ossrhUsername") as String? ?: ""
-                password = project.findProperty("ossrhPassword") as String? ?: ""
+
+    distributions {
+        create("alon-android") {
+            distributionType.set(DistributionType.JAVA_BINARY)
+            stereotype.set(Stereotype.MOBILE)
+            artifact {
+                path.set(layout.buildDirectory.file("outputs/aar/AlonAndroid-release.aar")) // Adjust path if necessary
             }
+            tags.set(listOf("android", "health", "library"))
         }
     }
 }

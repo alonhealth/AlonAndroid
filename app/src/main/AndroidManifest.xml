@@ -32,6 +32,5 @@
                 android:name="health_permissions"
                 android:resource="@array/health_permissions" />
         </activity>
-
     </application>
 </manifest>

@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "example"
+rootProject.name = "alon-android"
 include(":app")
 include(":AlonAndroid")
 
