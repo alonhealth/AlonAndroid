@@ -6,12 +6,12 @@
     <parent>
         <groupId>io.github.alonhealth</groupId>
         <artifactId>Alon-android</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.2</version>
     </parent>
 
     <groupId>io.github.alonhealth</groupId>
     <artifactId>alonandroid</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>aar</packaging>
 
     <name>Alon Android</name>
@@ -41,44 +41,7 @@
     </scm>
 
     <dependencies>
-        <dependency>
-            <groupId>androidx.core</groupId>
-            <artifactId>core-ktx</artifactId>
-            <version>1.8.0</version>
-        </dependency>
-        <dependency>
-            <groupId>androidx.appcompat</groupId>
-            <artifactId>appcompat</artifactId>
-            <version>1.4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.android.material</groupId>
-            <artifactId>material</artifactId>
-            <version>1.4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>androidx.test.ext</groupId>
-            <artifactId>junit</artifactId>
-            <version>1.1.3</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>androidx.test.espresso</groupId>
-            <artifactId>espresso-core</artifactId>
-            <version>3.4.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>androidx.health</groupId>
-            <artifactId>health-connect-client</artifactId>
-            <version>1.0.0-alpha09</version>
-        </dependency>
+        <!-- Add your dependencies here -->
     </dependencies>
 
     <build>
@@ -94,6 +57,33 @@
                     </sdk>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <name>OSSRH</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>OSSRH Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

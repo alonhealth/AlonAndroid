@@ -9,7 +9,7 @@ plugins {
 }
 
 allprojects {
-    version = "1.0.1" // Ensure this version follows semver
+    version = "1.0.2" // Ensure this version follows semver
 }
 
 android {
@@ -55,13 +55,13 @@ publishing {
         create<MavenPublication>("release") {
             groupId = "io.github.alonhealth"
             artifactId = "alonandroid"
-            version = "1.0.0"
+            version = "1.0.1"
             artifact("${projectDir}/build/outputs/aar/AlonAndroid-release.aar")
 
             pom {
                 name.set("Alon Android")
                 description.set("A library to fetch data from Health Connect")
-                url.set("https://github.com/alonhealth/AlonAndroid")
+                url.set("https://github.com/alonhealth/Alon-android")
                 licenses {
                     license {
                         name.set("The Apache License, Version 2.0")
@@ -76,9 +76,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection.set("scm:git:git://github.com/alonhealth/AlonAndroid.git")
-                    developerConnection.set("scm:git:ssh://github.com:alonhealth/AlonAndroid.git")
-                    url.set("https://github.com/alonhealth/AlonAndroid")
+                    connection.set("scm:git:git://github.com/alonhealth/Alon-android.git")
+                    developerConnection.set("scm:git:ssh://github.com:alonhealth/Alon-android.git")
+                    url.set("https://github.com/alonhealth/Alon-android")
                 }
             }
         }
@@ -102,6 +102,8 @@ jreleaser {
         description.set("A library to fetch data from Health Connect")
         links {
             homepage.set("https://github.com/alonhealth/Alon-android")
+            documentation.set("https://github.com/alonhealth/Alon-android")
+            license.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
             documentation.set("https://github.com/alonhealth/Alon-android")
             license.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
         }
