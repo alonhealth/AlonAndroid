@@ -12,7 +12,6 @@
 /captures
 .externalNativeBuild
 .cxx
-local.properties
 
 # Gradle files
 .gradle/
@@ -64,3 +63,8 @@ lint/outputs/
 # Google Services (Firebase)
 # This file contains a configuration of a project's settings that should not be shared.
 google-services.json
+
+gpgkey.asc
+gradle.properties
+**/output.properties
+

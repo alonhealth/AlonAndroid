@@ -1,0 +1,99 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.alonhealth</groupId>
+        <artifactId>Alon-android</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <groupId>io.github.alonhealth</groupId>
+    <artifactId>alonandroid</artifactId>
+    <version>1.0.0</version>
+    <packaging>aar</packaging>
+
+    <name>Alon Android</name>
+    <description>A library to fetch data from Health Connect</description>
+    <url>https://github.com/alonhealth/Alon-android</url>
+    <inceptionYear>2021</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>lucaslober</id>
+            <name>Lucas Lober</name>
+            <email>lucaslober@example.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/alonhealth/Alon-android.git</connection>
+        <developerConnection>scm:git:ssh://github.com:alonhealth/Alon-android.git</developerConnection>
+        <url>https://github.com/alonhealth/Alon-android</url>
+    </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>androidx.core</groupId>
+            <artifactId>core-ktx</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>androidx.appcompat</groupId>
+            <artifactId>appcompat</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.android.material</groupId>
+            <artifactId>material</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>androidx.test.ext</groupId>
+            <artifactId>junit</artifactId>
+            <version>1.1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>androidx.test.espresso</groupId>
+            <artifactId>espresso-core</artifactId>
+            <version>3.4.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>androidx.health</groupId>
+            <artifactId>health-connect-client</artifactId>
+            <version>1.0.0-alpha09</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.simpligility.maven.plugins</groupId>
+                <artifactId>android-maven-plugin</artifactId>
+                <version>4.6.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <sdk>
+                        <platform>34</platform>
+                    </sdk>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

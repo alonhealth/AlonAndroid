@@ -1,17 +1,20 @@
 [versions]
 agp = "8.3.1"
+bcprovJdk15on = "1.70"
 connectClient = "1.1.0-alpha07"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-appcompat = "1.6.1"
-material = "1.11.0"
+junitVersion = "1.2.1"  # Updated from 1.1.5
+espressoCore = "3.6.1"  # Updated from 3.5.1
+appcompat = "1.7.0"  # Updated from 1.6.1
+material = "1.12.0"  # Updated from 1.11.0
 
 [libraries]
 androidx-connect-client = { module = "androidx.health.connect:connect-client", version.ref = "connectClient" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+bcpg-jdk15on = { module = "org.bouncycastle:bcpg-jdk15on", version.ref = "bcprovJdk15on" }
+bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bcprovJdk15on" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -22,4 +25,3 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
-

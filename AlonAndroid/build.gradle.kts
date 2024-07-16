@@ -1,10 +1,15 @@
-import org.jreleaser.model.Distribution.DistributionType
-import org.jreleaser.model.Stereotype
+import java.nio.file.Files
+import java.nio.file.Paths
 
 plugins {
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("org.jreleaser") version "1.12.0"
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
+    id("maven-publish")
+    id("org.jreleaser") version "1.13.1"
+}
+
+allprojects {
+    version = "1.0.1" // Ensure this version follows semver
 }
 
 android {
@@ -18,7 +23,7 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -35,58 +40,6 @@ android {
     }
 }
 
-jreleaser {
-    project {
-        name.set("alon-android")
-        version.set("1.0.0")
-        description.set("A library to fetch data from Health Connect")
-        longDescription.set("A detailed description of the library.")
-        inceptionYear.set("2023")
-        copyright.set("2023 The AlonHealth Authors")
-        vendor.set("AlonHealth")
-
-        authors.set(listOf("Author Name"))
-        tags.set(listOf("android", "health", "library"))
-
-        links {
-            homepage.set("https://github.com/alonhealth/AlonAndroid")
-            documentation.set("https://github.com/alonhealth/AlonAndroid/wiki")
-            license.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-            bugTracker.set("https://github.com/alonhealth/AlonAndroid/issues")
-            vcsBrowser.set("https://github.com/alonhealth/AlonAndroid")
-        }
-    }
-
-    release {
-        github {
-            name.set("AlonAndroid")
-            tagName.set("v1.0.0")
-            releaseName.set("alon-android-1.0.0")
-            branch.set("main")
-            draft.set(false)
-            discussionCategoryName.set("General")
-            prerelease {
-                enabled.set(false)
-            }
-            releaseNotes {
-                enabled.set(true)
-                configurationFile.set("release-notes.md")
-            }
-        }
-    }
-
-    distributions {
-        create("alon-android") {
-            distributionType.set(DistributionType.JAVA_BINARY)
-            stereotype.set(Stereotype.MOBILE)
-            artifact {
-                path.set(layout.buildDirectory.file("outputs/aar/AlonAndroid-release.aar")) // Adjust path if necessary
-            }
-            tags.set(listOf("android", "health", "library"))
-        }
-    }
-}
-
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -95,4 +48,92 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.androidx.connect.client)
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("release") {
+            groupId = "io.github.alonhealth"
+            artifactId = "alonandroid"
+            version = "1.0.0"
+            artifact("${projectDir}/build/outputs/aar/AlonAndroid-release.aar")
+
+            pom {
+                name.set("Alon Android")
+                description.set("A library to fetch data from Health Connect")
+                url.set("https://github.com/alonhealth/AlonAndroid")
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("lucaslober")
+                        name.set("Lucas Lober")
+                        email.set("lucaslober@example.com")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/alonhealth/AlonAndroid.git")
+                    developerConnection.set("scm:git:ssh://github.com:alonhealth/AlonAndroid.git")
+                    url.set("https://github.com/alonhealth/AlonAndroid")
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "sonatype"
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                username = findProperty("ossrhUsername") as String? ?: System.getenv("OSSRH_USERNAME")
+                password = findProperty("ossrhPassword") as String? ?: System.getenv("OSSRH_PASSWORD")
+            }
+        }
+    }
+}
+
+jreleaser {
+    project {
+        name.set("AlonAndroid")
+        description.set("A library to fetch data from Health Connect")
+        links {
+            homepage.set("https://github.com/alonhealth/Alon-android")
+            documentation.set("https://github.com/alonhealth/Alon-android")
+            license.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+        }
+    }
+    release {
+        github {
+            repoOwner.set("alonhealth")
+            name.set("AlonAndroid")
+            token.set(findProperty("jreleaser.github.token") as String? ?: System.getenv("JRELEASER_GITHUB_TOKEN"))
+        }
+    }
+    gitRootSearch.set(true)  // Ensure JReleaser searches for the Git root
+    signing {
+        active.set(org.jreleaser.model.Active.ALWAYS)
+        armored.set(true)
+        publicKey.set(file("/Users/lucaslober/public_key.gpg").readText(Charsets.UTF_8))
+        secretKey.set(file("/Users/lucaslober/secret_key.gpg").readText(Charsets.UTF_8))
+        passphrase.set(findProperty("jreleaser.gpg.passphrase") as String? ?: System.getenv("JRELEASER_GPG_PASSPHRASE"))
+    }
+    deploy {
+        maven {
+            nexus2 {
+                register("maven-central") {
+                    url.set("https://s01.oss.sonatype.org/service/local")
+                    snapshotUrl.set("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                    closeRepository.set(true)
+                    releaseRepository.set(true)
+                    stagingRepository("build/staging-deploy")
+                    username.set(findProperty("ossrhUsername") as String? ?: System.getenv("OSSRH_USERNAME"))
+                    password.set(findProperty("ossrhPassword") as String? ?: System.getenv("OSSRH_PASSWORD"))
+                }
+            }
+        }
+    }
 }
