@@ -9,7 +9,7 @@ plugins {
 }
 
 allprojects {
-    version = "1.0.2" // Ensure this version follows semver
+    version = "1.0.3" // Ensure this version follows semver
 }
 
 android {
