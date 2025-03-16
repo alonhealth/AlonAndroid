@@ -1,0 +1,3 @@
+rootProject.name = "AlonAndroid"
+include ':alonhealth'
+include ':app' 

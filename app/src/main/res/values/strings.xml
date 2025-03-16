@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">AlonAndroid Sample</string>
+    <string name="health_data_title">Health Data</string>
+    <string name="heart_rate_title">Heart Rate</string>
+    <string name="steps_title">Steps</string>
+    <string name="sleep_title">Sleep</string>
+    <string name="weight_title">Weight</string>
+    <string name="health_score_title">Health Score</string>
+    <string name="request_permissions">Request Permissions</string>
+    <string name="fetch_data">Fetch Data</string>
+    <string name="calculate_score">Calculate Health Score</string>
+    <string name="install_health_connect">Install Health Connect</string>
+    <string name="no_health_connect">Health Connect is not available on this device</string>
+    <string name="permissions_granted">Permissions granted</string>
+    <string name="permissions_denied">Permissions denied</string>
+</resources> 
