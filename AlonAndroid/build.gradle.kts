@@ -9,7 +9,7 @@ plugins {
 }
 
 allprojects {
-    version = "1.0.3" // Ensure this version follows semver
+    version = "1.0.5" // Ensure this version follows semver
 }
 
 android {
@@ -55,7 +55,7 @@ publishing {
         create<MavenPublication>("release") {
             groupId = "io.github.alonhealth"
             artifactId = "alonandroid"
-            version = "1.0.1"
+            version = "1.0.5"
             artifact("${projectDir}/build/outputs/aar/AlonAndroid-release.aar")
 
             pom {
