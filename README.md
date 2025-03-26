@@ -1,6 +1,13 @@
 # AlonAndroid
 
-A powerful Android library for accessing and managing health data through Health Connect API. AlonAndroid simplifies the integration of health metrics like steps, heart rate variability, and sleep data into your Android applications.
+AlonAndroid is an Android library that provides easy integration with the Android Health Connect API. It allows developers to easily fetch health data, calculate health scores, and insert steps data into Health Connect.
+
+## Latest Release
+
+- **Version 1.1.0** - Improved implementation with proper Health Connect API integration
+  - Fixed compatibility issues with the latest Health Connect API
+  - Improved error handling for data access methods
+  - Enhanced code stability and reliability
 
 ## Features
 
@@ -28,8 +35,8 @@ dependencyResolutionManagement {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/alonhealth/AlonAndroid")
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
-                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+                username = providers.gradleProperty("github.username").getOrElse(System.getenv("GITHUB_USERNAME") ?: "")
+                password = providers.gradleProperty("github.token").getOrElse(System.getenv("GITHUB_TOKEN") ?: "")
             }
         }
     }
@@ -41,8 +48,8 @@ dependencyResolutionManagement {
 You'll need to provide GitHub credentials to access the package. Add the following to your `~/.gradle/gradle.properties` file:
 
 ```properties
-gpr.user=YOUR_GITHUB_USERNAME
-gpr.key=YOUR_GITHUB_PERSONAL_ACCESS_TOKEN
+github.username=YOUR_GITHUB_USERNAME
+github.token=YOUR_GITHUB_PERSONAL_ACCESS_TOKEN
 ```
 
 Make sure your Personal Access Token has at least the `read:packages` scope.
@@ -53,7 +60,7 @@ Add the dependency to your app module's `build.gradle.kts` file:
 
 ```kotlin
 dependencies {
-    implementation("io.github.alonhealth:alonandroid:1.0.6")
+    implementation("io.github.alonhealth:alonandroid:1.1.0")
 }
 ```
 
@@ -81,12 +88,12 @@ class MainActivity : AppCompatActivity() {
 
 ```kotlin
 lifecycleScope.launch {
-    healthConnectManager.requestAuthorization { success, exception ->
+    healthConnectManager.requestAuthorization { success, error ->
         if (success) {
-            Toast.makeText(this@MainActivity, "Authorization successful", Toast.LENGTH_SHORT).show()
-            // Ready to read health data
+            // Permissions granted, you can now use Health Connect
         } else {
-            Toast.makeText(this@MainActivity, "Authorization failed: ${exception?.message}", Toast.LENGTH_SHORT).show()
+            // Handle error
+            Log.e("HealthConnect", "Error: ${error?.message}")
         }
     }
 }
@@ -96,11 +103,11 @@ lifecycleScope.launch {
 
 ```kotlin
 lifecycleScope.launch {
-    try {
-        val stepsCount = healthConnectManager.readSteps()
-        textView.text = "Steps: ${stepsCount ?: 0}"
-    } catch (e: Exception) {
-        Log.e("HealthData", "Error reading steps", e)
+    val stepsData = healthConnectManager.fetchStepsData()
+    if (stepsData != null) {
+        Log.d("HealthConnect", "Steps: $stepsData")
+    } else {
+        Log.d("HealthConnect", "No steps data available")
     }
 }
 ```
@@ -126,9 +133,9 @@ lifecycleScope.launch {
 lifecycleScope.launch {
     healthConnectManager.calculateHealthScore { score ->
         if (score != null) {
-            textView.text = "Health Score: $score"
+            Log.d("HealthConnect", "Health Score: $score")
         } else {
-            textView.text = "Failed to calculate health score"
+            Log.d("HealthConnect", "Could not calculate health score")
         }
     }
 }
@@ -144,6 +151,8 @@ This library requires Health Connect permissions to access health data. Add the 
 <uses-permission android:name="android.permission.health.WRITE_STEPS" />
 <uses-permission android:name="android.permission.health.READ_HEART_RATE" />
 <uses-permission android:name="android.permission.health.READ_SLEEP" />
+<uses-permission android:name="android.permission.health.READ_DISTANCE" />
+<uses-permission android:name="android.permission.health.READ_HEART_RATE_VARIABILITY" />
 ```
 
 You'll also need to request these permissions at runtime using the Health Connect permission handling.
