@@ -5,7 +5,6 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("maven-publish")
-    id("org.jreleaser") version "1.13.1"
 }
 
 allprojects {
@@ -50,14 +49,23 @@ dependencies {
     implementation(libs.androidx.connect.client)
 }
 
+// Ensure AAR is built before publishing
+tasks.withType<AbstractPublishToMaven>().configureEach {
+    dependsOn("assemble")
+}
+
 publishing {
     publications {
         create<MavenPublication>("release") {
             groupId = "io.github.alonhealth"
             artifactId = "alonandroid"
             version = "1.0.5"
-            artifact("${projectDir}/build/outputs/aar/AlonAndroid-release.aar")
-
+            
+            // This is a simpler way to include the AAR
+            afterEvaluate {
+                from(components["release"])
+            }
+            
             pom {
                 name.set("Alon Android")
                 description.set("A library to fetch data from Health Connect")
@@ -76,9 +84,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection.set("scm:git:git://github.com/alonhealth/Alon-android.git")
-                    developerConnection.set("scm:git:ssh://github.com:alonhealth/Alon-android.git")
-                    url.set("https://github.com/alonhealth/Alon-android")
+                    connection.set("scm:git:git://github.com/alonhealth/AlonAndroid.git")
+                    developerConnection.set("scm:git:ssh://github.com:alonhealth/AlonAndroid.git")
+                    url.set("https://github.com/alonhealth/AlonAndroid")
                 }
             }
         }
@@ -86,55 +94,11 @@ publishing {
 
     repositories {
         maven {
-            name = "sonatype"
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/alonhealth/AlonAndroid")
             credentials {
-                username = findProperty("ossrhUsername") as String? ?: System.getenv("OSSRH_USERNAME")
-                password = findProperty("ossrhPassword") as String? ?: System.getenv("OSSRH_PASSWORD")
-            }
-        }
-    }
-}
-
-jreleaser {
-    project {
-        name.set("AlonAndroid")
-        description.set("A library to fetch data from Health Connect")
-        links {
-            homepage.set("https://github.com/alonhealth/Alon-android")
-            documentation.set("https://github.com/alonhealth/Alon-android")
-            license.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-            documentation.set("https://github.com/alonhealth/Alon-android")
-            license.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-        }
-    }
-    release {
-        github {
-            repoOwner.set("alonhealth")
-            name.set("AlonAndroid")
-            token.set(findProperty("jreleaser.github.token") as String? ?: System.getenv("JRELEASER_GITHUB_TOKEN"))
-        }
-    }
-    gitRootSearch.set(true)  // Ensure JReleaser searches for the Git root
-    signing {
-        active.set(org.jreleaser.model.Active.ALWAYS)
-        armored.set(true)
-        publicKey.set(file("/Users/lucaslober/public_key.gpg").readText(Charsets.UTF_8))
-        secretKey.set(file("/Users/lucaslober/secret_key.gpg").readText(Charsets.UTF_8))
-        passphrase.set(findProperty("jreleaser.gpg.passphrase") as String? ?: System.getenv("JRELEASER_GPG_PASSPHRASE"))
-    }
-    deploy {
-        maven {
-            nexus2 {
-                register("maven-central") {
-                    url.set("https://s01.oss.sonatype.org/service/local")
-                    snapshotUrl.set("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-                    closeRepository.set(true)
-                    releaseRepository.set(true)
-                    stagingRepository("build/staging-deploy")
-                    username.set(findProperty("ossrhUsername") as String? ?: System.getenv("OSSRH_USERNAME"))
-                    password.set(findProperty("ossrhPassword") as String? ?: System.getenv("OSSRH_PASSWORD"))
-                }
+                username = findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
+                password = findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
             }
         }
     }

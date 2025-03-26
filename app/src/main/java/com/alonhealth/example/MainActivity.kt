@@ -100,9 +100,9 @@ class MainActivity : AppCompatActivity() {
     private fun readSteps() {
         lifecycleScope.launch {
             try {
-                val stepsCount = healthConnectManager.fetchStepsData()
+                val stepsCount = healthConnectManager.readSteps()
                 // Update the UI with the total steps count
-                stepsTextView.text = getString(R.string.steps_text, stepsCount?.toLong() ?: 0)
+                stepsTextView.text = getString(R.string.steps_text, stepsCount)
                 Toast.makeText(this@MainActivity, "Read steps: $stepsCount", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 e.printStackTrace()
