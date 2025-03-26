@@ -57,6 +57,14 @@ class HealthConnectManager(private val context: Context) {
             }
         }
     }
+    
+    /**
+     * Compatibility method for older integrations
+     * Reads steps data for the last 7 days
+     */
+    suspend fun readSteps(): Double? {
+        return fetchStepsData()
+    }
 
     /**
      * Read HRV data for the last 7 days
