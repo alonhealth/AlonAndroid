@@ -8,7 +8,7 @@ plugins {
 }
 
 allprojects {
-    version = "1.0.5" // Ensure this version follows semver
+    version = "1.0.6" // Ensure this version follows semver
 }
 
 android {
@@ -59,7 +59,7 @@ publishing {
         create<MavenPublication>("release") {
             groupId = "io.github.alonhealth"
             artifactId = "alonandroid"
-            version = "1.0.5"
+            version = "1.0.6"
             
             // This is a simpler way to include the AAR
             afterEvaluate {
