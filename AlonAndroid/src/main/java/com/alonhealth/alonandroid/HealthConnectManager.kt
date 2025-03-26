@@ -33,24 +33,22 @@ class HealthConnectManager(private val context: Context) {
      */
     suspend fun requestAuthorization(callback: (Boolean, Exception?) -> Unit) {
         try {
-            // Check if Health Connect is installed
-            val isAvailable = healthConnectClient.isProviderAvailable()
-            if (!isAvailable) {
-                callback(false, Exception("Health Connect is not available on this device"))
-                return
-            }
-
-            // Get granted permissions
-            val grantedPermissions = healthConnectClient.permissionController.getGrantedPermissions()
-            
-            // Check if all required permissions are granted
-            if (permissions.all { it in grantedPermissions }) {
-                callback(true, null)
-            } else {
-                // For full implementation, you would typically use 
-                // PermissionController.createRequestPermissionResultContract() 
-                // to request permissions using ActivityResultLauncher, but this needs Activity context
-                callback(false, Exception("Required Health Connect permissions not granted"))
+            // Check if Health Connect is available by attempting to get granted permissions
+            // This will throw an exception if Health Connect is not available
+            try {
+                val grantedPermissions = healthConnectClient.permissionController.getGrantedPermissions()
+                
+                // Check if all required permissions are granted
+                if (permissions.all { it in grantedPermissions }) {
+                    callback(true, null)
+                } else {
+                    // For full implementation, you would typically use 
+                    // PermissionController.createRequestPermissionResultContract() 
+                    // to request permissions using ActivityResultLauncher, but this needs Activity context
+                    callback(false, Exception("Required Health Connect permissions not granted"))
+                }
+            } catch (e: Exception) {
+                callback(false, Exception("Health Connect is not available on this device: ${e.message}"))
             }
         } catch (e: Exception) {
             callback(false, e)
@@ -111,21 +109,24 @@ class HealthConnectManager(private val context: Context) {
                 }
                 
                 // Calculate average RMSSD value
-                // Note: The field name might vary based on the Health Connect API version
-                // For newer API versions, you might need to use a different property name
-                val sum = response.records.sumOf { 
+                var sum = 0.0
+                var count = 0
+                
+                for (record in response.records) {
                     try {
-                        // Try to access the HRV value using reflection to handle different API versions
-                        val field = it.javaClass.getDeclaredField("rmssd")
-                        field.isAccessible = true
-                        (field.get(it) as? Number)?.toDouble() ?: 0.0
+                        sum += record.rmssd
+                        count++
                     } catch (e: Exception) {
-                        // Fallback to a common property that might exist in different versions
-                        it.metadata.id.hashCode() % 50 + 30.0 // Generate a plausible value for testing only
+                        // Skip records that don't have the property
+                        e.printStackTrace()
                     }
                 }
                 
-                sum / response.records.size
+                if (count > 0) {
+                    sum / count
+                } else {
+                    null
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
                 null
