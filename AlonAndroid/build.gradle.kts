@@ -97,8 +97,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/alonhealth/AlonAndroid")
             credentials {
-                username = findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
-                password = findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+                username = System.getenv("GITHUB_USERNAME") ?: project.findProperty("github.username") as String? ?: System.getProperty("github.username")
+                password = System.getenv("GITHUB_TOKEN") ?: project.findProperty("github.token") as String? ?: System.getProperty("github.token")
             }
         }
     }
